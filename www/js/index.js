@@ -27,7 +27,7 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        window.location.replace("mapboxgl.html");
+        window.location.replace("map/index.html");
         this.receivedEvent('deviceready');
     },
 

@@ -528,7 +528,7 @@
                 "DATA_INICI": "2016-02-11Z",
                 "DESC_LINIA": "Aeroport T1 - Zona Universitaria",
                 "DESC_TIPUS_CALENDARI": "Tots els dies",
-                "DESTI_LINIA": "Zona Universit\u00e0ria",
+                "DESTI_LINIA": "Zona Universitària",
                 "ID_FAMILIA": 1,
                 "ID_LINIA": 12,
                 "ID_OPERADOR": 1,
@@ -576,9 +576,9 @@
                 "COLOR_TEXT_LINIA": "FFFFFF",
                 "DATA_FI": null,
                 "DATA_INICI": "2013-04-12Z",
-                "DESC_LINIA": "Paral\u00b7lel - Parc de Montju\u00efc",
+                "DESC_LINIA": "Paral.lel - Parc de Montjuïc",
                 "DESC_TIPUS_CALENDARI": "Tots els dies",
-                "DESTI_LINIA": "Parc de Montju\u00efc",
+                "DESTI_LINIA": "Parc de Montjuïc",
                 "ID_FAMILIA": 2,
                 "ID_LINIA": 1,
                 "ID_OPERADOR": 1,
@@ -590,7 +590,7 @@
                 "NOM_TIPUS_TRANSPORT": "FUNICULAR",
                 "ORDRE_FAMILIA": 2,
                 "ORDRE_LINIA": 16,
-                "ORIGEN_LINIA": "Paral\u00b7lel"
+                "ORIGEN_LINIA": "Paral.lel"
             },
             "type": "Feature"
         },
@@ -978,7 +978,7 @@
                 "COLOR_TEXT_LINIA": "FFFFFF",
                 "DATA_FI": null,
                 "DATA_INICI": "2013-04-12Z",
-                "DESC_LINIA": "Zona Universit\u00e0ria - Trinitat Nova",
+                "DESC_LINIA": "Zona Universitària - Trinitat Nova",
                 "DESC_TIPUS_CALENDARI": "Tots els dies",
                 "DESTI_LINIA": "Trinitat Nova",
                 "ID_FAMILIA": 1,
@@ -992,7 +992,7 @@
                 "NOM_TIPUS_TRANSPORT": "METRO",
                 "ORDRE_FAMILIA": 1,
                 "ORDRE_LINIA": 3,
-                "ORIGEN_LINIA": "Zona Universit\u00e0ria"
+                "ORIGEN_LINIA": "Zona Universitària"
             },
             "type": "Feature"
         },
@@ -1408,7 +1408,7 @@
                 "COLOR_TEXT_LINIA": "FFFFFF",
                 "DATA_FI": null,
                 "DATA_INICI": "2013-04-12Z",
-                "DESC_LINIA": "Cornell\u00e0 Centre - Vall d'Hebron",
+                "DESC_LINIA": "Cornellà Centre - Vall d'Hebron",
                 "DESC_TIPUS_CALENDARI": "Tots els dies",
                 "DESTI_LINIA": "Vall d'Hebron",
                 "ID_FAMILIA": 1,
@@ -1422,7 +1422,7 @@
                 "NOM_TIPUS_TRANSPORT": "METRO",
                 "ORDRE_FAMILIA": 1,
                 "ORDRE_LINIA": 5,
-                "ORIGEN_LINIA": "Cornell\u00e0 Centre"
+                "ORIGEN_LINIA": "Cornellà Centre"
             },
             "type": "Feature"
         },
@@ -2526,7 +2526,7 @@
                 "COLOR_TEXT_LINIA": "FFFFFF",
                 "DATA_FI": null,
                 "DATA_INICI": "2013-04-12Z",
-                "DESC_LINIA": "Paral\u00b7lel - Badalona Pompeu Fabra",
+                "DESC_LINIA": "Paral.lel - Badalona Pompeu Fabra",
                 "DESC_TIPUS_CALENDARI": "Tots els dies",
                 "DESTI_LINIA": "Badalona Pompeu Fabra",
                 "ID_FAMILIA": 1,
@@ -2540,7 +2540,7 @@
                 "NOM_TIPUS_TRANSPORT": "METRO",
                 "ORDRE_FAMILIA": 1,
                 "ORDRE_LINIA": 2,
-                "ORIGEN_LINIA": "Paral\u00b7lel"
+                "ORIGEN_LINIA": "Paral.lel"
             },
             "type": "Feature"
         },
@@ -2644,9 +2644,9 @@
                 "COLOR_TEXT_LINIA": "FFFFFF",
                 "DATA_FI": null,
                 "DATA_INICI": "2013-04-12Z",
-                "DESC_LINIA": "Trinitat Nova - Can Cui\u00e0s",
+                "DESC_LINIA": "Trinitat Nova - Can Cuiàs",
                 "DESC_TIPUS_CALENDARI": "Tots els dies",
-                "DESTI_LINIA": "Can Cui\u00e0s",
+                "DESTI_LINIA": "Can Cuiàs",
                 "ID_FAMILIA": 1,
                 "ID_LINIA": 7,
                 "ID_OPERADOR": 1,
