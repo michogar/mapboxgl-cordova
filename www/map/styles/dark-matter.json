@@ -37,7 +37,7 @@
       "maxzoom": 14
     }
   },
-  "sprite": "http://fonts.cat/vectortile-samples/sprites/logos",
+  "sprite": "sprites/logos",
   "glyphs": "fonts/{fontstack}/{range}.pbf",
   "layers": [
     {

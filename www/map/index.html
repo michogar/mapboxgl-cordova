@@ -65,8 +65,8 @@
       response.json().then(function (baseStyle) {
         var path = location.origin + location.pathname.split("/").slice(0, -1).join("/") + "/";
         baseStyle.sources.openmaptiles.tiles = [path + baseStyle.sources.openmaptiles.tiles[0]];
+        baseStyle.sprite = path + baseStyle.sprite;
         instantiate(baseStyle);
-
       });
     });
   }
