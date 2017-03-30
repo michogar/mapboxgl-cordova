@@ -31,7 +31,10 @@
   "sources": {
     "openmaptiles": {
       "type": "vector",
-      "url": "data/openmaptiles.json"
+      "tiles": [
+        "data/openmaptiles/{z}/{x}/{y}.pbf"
+      ],
+      "maxzoom": 14
     }
   },
   "sprite": "http://fonts.cat/vectortile-samples/sprites/logos",

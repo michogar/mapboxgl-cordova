@@ -19,166 +19,186 @@
 <script>
 
   // Specific 'fetch' polyfill for android platform
-  // using HTML5 Fil    e API and cordova-plugin-file
+  // using HTML5 File API and cordova-plugin-file
   if (typeof cordova != 'undefined' && cordova.platformId == 'android') {
-    var fetch = function (url) {
-      var path = location.origin + location.pathname.split("/").slice(0, -1).join("/") + "/";
-      return new Promise(function (resolve, reject) {
-        window.resolveLocalFileSystemURL(path + url, function (fileEntry) {
-          fileEntry.file(function (file) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-              var text = e.target.result;
-              var jsonPromise = new Promise(function (resolve, reject) {
-                try {
-                  console.log(text);
-                  resolve(JSON.parse(text));
-                } catch (e) {
-                  reject(e);
-                }
-              });
-              resolve({
-                json: function () {
-                  return jsonPromise;
-                }
-              });
-            };
-            reader.onerror = function (e) {
-              reject(e);
-            };
-            reader.readAsText(file, 'UTF-8');
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+      fetch = function (url) {
+        var path = location.origin + location.pathname.split("/").slice(0, -1).join("/") + "/";
+        return new Promise(function (resolve, reject) {
+          resolveLocalFileSystemURL(path + url, function (fileEntry) {
+            fileEntry.file(function (file) {
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                var text = e.target.result;
+                var jsonPromise = new Promise(function (resolve, reject) {
+                  try {
+                    resolve(JSON.parse(text));
+                  } catch (e) {
+                    reject(e);
+                  }
+                });
+                resolve({
+                  json: function () {
+                    return jsonPromise;
+                  }
+                });
+              };
+              reader.onerror = function (e) {
+                reject(e);
+              };
+              reader.readAsText(file, 'UTF-8');
+            });
+          }, function (error) {
+            reject(error);
           });
-        }, function (error) {
-          reject(error);
         });
+      };
+      init();
+    }
+  } else {
+    init();
+  }
+
+  function init() {
+    fetch('styles/dark-matter.json').then(function (response) {
+      response.json().then(function (baseStyle) {
+        var path = location.origin + location.pathname.split("/").slice(0, -1).join("/") + "/";
+        baseStyle.sources.openmaptiles.tiles = [path + baseStyle.sources.openmaptiles.tiles[0]];
+        instantiate(baseStyle);
+
       });
-    };
+    });
   }
 
-  var map = new mapboxgl.Map({
-    container: 'map',
-    style: 'styles/dark-matter.json',
-    hash: true
-  });
+  function instantiate(baseStyle) {
 
-  var nav = new mapboxgl.NavigationControl();
-  map.addControl(nav, 'top-right');
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: baseStyle,
+      hash: true
+    });
 
-  var datasets = {};
+    var nav = new mapboxgl.NavigationControl();
+    map.addControl(nav, 'top-right');
 
-  var styles = [{
-    "id": "linies",
-    "type": "line",
-    "source": "LINIES_METRO",
-    "layout": {
-      "line-join": "round",
-      "line-cap": "round"
-    },
-    "paint": {
-      "line-color": {
-        "property": "COLOR_LINIA",
-        "type": "categorical",
-        "stops": [
-          ['CE1126', '#CE1126'],
-          ['93248F', '#93248F'],
-          ['1EB53A', '#1EB53A'],
-          ['F7A30E', '#F7A30E'],
-          ['00A6D6', '#00A6D6'],
-          ['004C38', '#004C38'],
-          ['005A97', '#005A97'],
-          ['89B94C', '#89B94C'],
-          ['FB712B', '#FB712B']
-        ]
+    var datasets = {};
+
+    var styles = [{
+      "id": "linies",
+      "type": "line",
+      "source": "LINIES_METRO",
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round"
       },
-      "line-width": 4
-    }
-  }, {
-    "id": "estacions",
-    "type": "symbol",
-    "source": "EST_LINIA_CENTRAL",
-    "layout": {
-      "icon-image": "{PICTO}",
-      "icon-size": {
-        "stops": [
-          [10, 0],
-          [11, 0.2],
-          [13, 0.25],
-          [20, 0.5]
-        ]
-      },
-      "icon-allow-overlap": true,
-      "text-field": "{NOM_ESTACIO}",
-      "text-font": ["Open Sans Semibold"],
-      "text-offset": [1, 0],
-      "text-anchor": "left",
-      "text-size": {
-        "stops": [
-          [12.9, 0],
-          [13, 11],
-          [20, 24]
-        ]
-      },
-      "text-optional": true
-    },
-    "paint": {
-      "text-halo-width": 1,
-      "text-halo-color": "#000000",
-      "text-color": "#FFFFFF"
-    }
-  }];
-
-  function addLayers() {
-    styles.map(addLayer);
-  }
-
-  function addLayer(style) {
-    if (datasets[style.source]) {
-      if (!map.getSource(style.source)) {
-        map.addSource(style.source, {
-          "type": "geojson",
-          "data": datasets[style.source]
-        });
+      "paint": {
+        "line-color": {
+          "property": "COLOR_LINIA",
+          "type": "categorical",
+          "stops": [
+            ['CE1126', '#CE1126'],
+            ['93248F', '#93248F'],
+            ['1EB53A', '#1EB53A'],
+            ['F7A30E', '#F7A30E'],
+            ['00A6D6', '#00A6D6'],
+            ['004C38', '#004C38'],
+            ['005A97', '#005A97'],
+            ['89B94C', '#89B94C'],
+            ['FB712B', '#FB712B']
+          ]
+        },
+        "line-width": 4
       }
-      map.addLayer(style);
-    }
-  }
+    }, {
+      "id": "estacions",
+      "type": "symbol",
+      "source": "EST_LINIA_CENTRAL",
+      "layout": {
+        "icon-image": "{PICTO}",
+        "icon-size": {
+          "stops": [
+            [10, 0],
+            [11, 0.2],
+            [13, 0.25],
+            [20, 0.5]
+          ]
+        },
+        "icon-allow-overlap": true,
+        "text-field": "{NOM_ESTACIO}",
+        "text-font": ["Open Sans Semibold"],
+        "text-offset": [1, 0],
+        "text-anchor": "left",
+        "text-size": {
+          "stops": [
+            [12.9, 0],
+            [13, 11],
+            [20, 24]
+          ]
+        },
+        "text-optional": true
+      },
+      "paint": {
+        "text-halo-width": 1,
+        "text-halo-color": "#000000",
+        "text-color": "#FFFFFF"
+      }
+    }];
 
-  map.on('load', function () {
-    var getLayerData = function (datasource) {
-      return fetch('data/' + datasource + '.geojson').then(function (response) {
-        return response.json().then(function (data) {
-          data.features = data.features.map(function (feature) {
-            delete feature.id;
-            return feature;
+    function addLayers() {
+      styles.map(addLayer);
+    }
+
+    function addLayer(style) {
+      if (datasets[style.source]) {
+        if (!map.getSource(style.source)) {
+          map.addSource(style.source, {
+            "type": "geojson",
+            "data": datasets[style.source]
           });
-          datasets[datasource] = data;
-          return data;
-        });
-      });
-    };
-
-    var datasources = Object.keys(styles.reduce(function (datasources, style) {
-      datasources[style.source] = "";
-      return datasources;
-    }, {}));
-    Promise.all(datasources.map(getLayerData)).then(addLayers);
-  });
-
-  map.on('mousemove', function (e) {
-    var features = map.queryRenderedFeatures(e.point, {layers: ['estacions']});
-    map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
-  });
-
-  map.on('click', function (e) {
-    var estacions = map.queryRenderedFeatures(e.point, {layers: ['estacions']});
-    if (estacions.length) {
-      map.flyTo({center: estacions[0].geometry.coordinates});
-      var html = estacions.map(function (estacio) {
-        return estacio.properties.NOM_LINIA + " - " + estacio.properties.NOM_ESTACIO;
-      }).join("<br/>");
-      new mapboxgl.Popup().setLngLat(estacions[0].geometry.coordinates).setHTML(html).addTo(map);
+        }
+        map.addLayer(style);
+      }
     }
-  });
+
+    map.on('load', function () {
+      var getLayerData = function (datasource) {
+        return fetch('data/' + datasource + '.geojson').then(function (response) {
+          return response.json().then(function (data) {
+            data.features = data.features.map(function (feature) {
+              delete feature.id;
+              return feature;
+            });
+            datasets[datasource] = data;
+            return data;
+          });
+        });
+      };
+
+      var datasources = Object.keys(styles.reduce(function (datasources, style) {
+        datasources[style.source] = "";
+        return datasources;
+      }, {}));
+      Promise.all(datasources.map(getLayerData)).then(addLayers);
+    });
+
+    map.on('mousemove', function (e) {
+      var features = map.queryRenderedFeatures(e.point, {layers: ['estacions']});
+      map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
+    });
+
+    map.on('click', function (e) {
+      var estacions = map.queryRenderedFeatures(e.point, {layers: ['estacions']});
+      if (estacions.length) {
+        map.flyTo({center: estacions[0].geometry.coordinates});
+        var html = estacions.map(function (estacio) {
+          return estacio.properties.NOM_LINIA + " - " + estacio.properties.NOM_ESTACIO;
+        }).join("<br/>");
+        new mapboxgl.Popup().setLngLat(estacions[0].geometry.coordinates).setHTML(html).addTo(map);
+      }
+    });
+
+  }
 
 </script>
 </body>
