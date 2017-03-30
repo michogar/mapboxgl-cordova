@@ -1,48 +1,205 @@
 <!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
 <head>
-    <!--
-    Customize this policy to fit your own app's needs. For more guidance, see:
-        https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-    Some notes:
-        * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-        * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-        * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-            * Enable inline JS: add 'unsafe-inline' to default-src
-    -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-    <link rel="stylesheet" type="text/css" href="css/index.css">
-    <title>Hello World</title>
+    <title>Mapbox-GL Map</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='lib/mapbox-gl-js/v0.34.0-patched/mapbox-gl.css' rel='stylesheet'/>
+    <style type="text/css">
+        html, body, #map {
+            margin: 0;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
-<div class="app">
-    <h1>Apache Cordova</h1>
-    <div id="deviceready" class="blink">
-        <a href="map/index.html">Vector Mapbox GL</a>
-    </div>
-</div>
+<div id="map"></div>
 <script type="text/javascript" src="cordova.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
+<script src='lib/mapbox-gl-js/v0.34.0-patched/mapbox-gl.js'></script>
+<script>
+
+  // Specific 'fetch' polyfill for android platform
+  // using HTML5 File API and cordova-plugin-file
+  if (typeof cordova != 'undefined' && cordova.platformId == 'android') {
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+      fetch = function (url) {
+        var path = location.origin + location.pathname.split("/").slice(0, -1).join("/") + "/";
+        return new Promise(function (resolve, reject) {
+          resolveLocalFileSystemURL(path + url, function (fileEntry) {
+            fileEntry.file(function (file) {
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                var text = e.target.result;
+                var jsonPromise = new Promise(function (resolve, reject) {
+                  try {
+                    resolve(JSON.parse(text));
+                  } catch (e) {
+                    reject(e);
+                  }
+                });
+                resolve({
+                  json: function () {
+                    return jsonPromise;
+                  }
+                });
+              };
+              reader.onerror = function (e) {
+                reject(e);
+              };
+              reader.readAsText(file, 'UTF-8');
+            });
+          }, function (error) {
+            reject(error);
+          });
+        });
+      };
+      init();
+    }
+  } else {
+    init();
+  }
+
+  function init() {
+    fetch('styles/dark-matter.json').then(function (response) {
+      response.json().then(function (baseStyle) {
+        var path = location.origin + location.pathname.split("/").slice(0, -1).join("/") + "/";
+        baseStyle.sources.openmaptiles.tiles = [path + baseStyle.sources.openmaptiles.tiles[0]];
+        baseStyle.sprite = path + baseStyle.sprite;
+        instantiate(baseStyle);
+      });
+    });
+  }
+
+  function instantiate(baseStyle) {
+
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: baseStyle,
+      hash: true
+    });
+
+    var nav = new mapboxgl.NavigationControl();
+    map.addControl(nav, 'top-right');
+
+    var datasets = {};
+
+    var styles = [{
+      "id": "linies",
+      "type": "line",
+      "source": "LINIES_METRO",
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": {
+          "property": "COLOR_LINIA",
+          "type": "categorical",
+          "stops": [
+            ['CE1126', '#CE1126'],
+            ['93248F', '#93248F'],
+            ['1EB53A', '#1EB53A'],
+            ['F7A30E', '#F7A30E'],
+            ['00A6D6', '#00A6D6'],
+            ['004C38', '#004C38'],
+            ['005A97', '#005A97'],
+            ['89B94C', '#89B94C'],
+            ['FB712B', '#FB712B']
+          ]
+        },
+        "line-width": 4
+      }
+    }, {
+      "id": "estacions",
+      "type": "symbol",
+      "source": "EST_LINIA_CENTRAL",
+      "layout": {
+        "icon-image": "{PICTO}",
+        "icon-size": {
+          "stops": [
+            [10, 0],
+            [11, 0.2],
+            [13, 0.25],
+            [20, 0.5]
+          ]
+        },
+        "icon-allow-overlap": true,
+        "text-field": "{NOM_ESTACIO}",
+        "text-font": ["Open Sans Semibold"],
+        "text-offset": [1, 0],
+        "text-anchor": "left",
+        "text-size": {
+          "stops": [
+            [12.9, 0],
+            [13, 11],
+            [20, 24]
+          ]
+        },
+        "text-optional": true
+      },
+      "paint": {
+        "text-halo-width": 1,
+        "text-halo-color": "#000000",
+        "text-color": "#FFFFFF"
+      }
+    }];
+
+    function addLayers() {
+      styles.map(addLayer);
+    }
+
+    function addLayer(style) {
+      if (datasets[style.source]) {
+        if (!map.getSource(style.source)) {
+          map.addSource(style.source, {
+            "type": "geojson",
+            "data": datasets[style.source]
+          });
+        }
+        map.addLayer(style);
+      }
+    }
+
+    map.on('load', function () {
+      var getLayerData = function (datasource) {
+        return fetch('data/' + datasource + '.geojson').then(function (response) {
+          return response.json().then(function (data) {
+            data.features = data.features.map(function (feature) {
+              delete feature.id;
+              return feature;
+            });
+            datasets[datasource] = data;
+            return data;
+          });
+        });
+      };
+
+      var datasources = Object.keys(styles.reduce(function (datasources, style) {
+        datasources[style.source] = "";
+        return datasources;
+      }, {}));
+      Promise.all(datasources.map(getLayerData)).then(addLayers);
+    });
+
+    map.on('mousemove', function (e) {
+      var features = map.queryRenderedFeatures(e.point, {layers: ['estacions']});
+      map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
+    });
+
+    map.on('click', function (e) {
+      var estacions = map.queryRenderedFeatures(e.point, {layers: ['estacions']});
+      if (estacions.length) {
+        map.flyTo({center: estacions[0].geometry.coordinates});
+        var html = estacions.map(function (estacio) {
+          return estacio.properties.NOM_LINIA + " - " + estacio.properties.NOM_ESTACIO;
+        }).join("<br/>");
+        new mapboxgl.Popup().setLngLat(estacions[0].geometry.coordinates).setHTML(html).addTo(map);
+      }
+    });
+
+  }
+
+</script>
 </body>
 </html>
