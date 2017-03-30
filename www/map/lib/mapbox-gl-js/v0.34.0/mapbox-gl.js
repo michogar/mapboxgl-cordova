@@ -12494,6 +12494,7 @@
         var t = parseUrl(r);
         return t.path = "/v4/" + t.authority + ".json", t.params.push("secure"), makeAPIURL(t, e)
       }, exports.normalizeSpriteURL = function (r, e, t, o) {
+        if(!isMapboxURL(r))return r+e+t;
         var a = parseUrl(r);
         return isMapboxURL(r) ? (a.path = "/styles/v1" + a.path + "/sprite" + e + t, makeAPIURL(a, o)) : (a.path += "" + e + t, formatUrl(a))
       };
