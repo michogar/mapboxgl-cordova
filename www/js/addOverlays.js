@@ -35,21 +35,26 @@ var addOverlays = function(url, map) {
 
     function addDataToMap(name) {
       return function(data) {
-        return map.addSource(name, {
+        map.addSource(name, {
           "type": "geojson",
           "data": data
         });
+        return data;
       }
     }
 
     function addStyles(styles) {
-      return function() {
-        styles.map(addStyle);
+      return function(datasources) {
+        return {
+          datasources: datasources,
+          styles: styles.map(addStyle)
+        }
       }
     }
 
     function addStyle(style) {
-      return map.addLayer(style);
+      map.addLayer(style);
+      return style;
     }
 
   });
