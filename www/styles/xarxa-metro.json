@@ -1,0 +1,92 @@
+{
+  "version": 8,
+  "id": "xarxa-metro",
+  "name": "Xarxa de Metro",
+  "center": [
+    2.15,
+    41.38
+  ],
+  "zoom": 12,
+  "bearing": -45,
+  "pitch": 0,
+  "sources": {
+    "linies": {
+      "type": "geojson",
+      "data": "data/LINIES_METRO.geojson",
+      "maxzoom": 20
+    },
+    "estacions": {
+      "type": "geojson",
+      "data": "data/EST_LINIA_CENTRAL.geojson",
+      "maxzoom": 20
+    }
+  },
+  "glyphs": "fonts/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "linies",
+      "type": "line",
+      "source": "linies",
+      "maxzoom": 16,
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": {
+          "property": "COLOR_LINIA",
+          "type": "categorical",
+          "stops": [
+            ["CE1126", "#CE1126"],
+            ["93248F", "#93248F"],
+            ["1EB53A", "#1EB53A"],
+            ["F7A30E", "#F7A30E"],
+            ["00A6D6", "#00A6D6"],
+            ["004C38", "#004C38"],
+            ["005A97", "#005A97"],
+            ["89B94C", "#89B94C"],
+            ["FB712B", "#FB712B"]
+          ]
+        },
+        "line-width": 4
+      }
+    },
+    {
+      "id": "estacions",
+      "type": "symbol",
+      "source": "estacions",
+      "maxzoom": 16,
+      "layout": {
+        "icon-image": "{PICTO}",
+        "icon-size": {
+          "stops": [
+            [10, 0],
+            [11, 0.2],
+            [13, 0.25],
+            [20, 0.5]
+          ]
+        },
+        "icon-allow-overlap": true,
+        "text-field": "{NOM_ESTACIO}",
+        "text-font": [
+          "Open Sans Semibold"
+        ],
+        "text-offset": [1, 0],
+        "text-anchor": "left",
+        "text-size": {
+          "stops": [
+            [12.9, 0],
+            [13, 11],
+            [20, 24]
+          ]
+        },
+        "text-optional": true
+      },
+      "paint": {
+        "text-halo-width": 1,
+        "text-halo-color": "#000000",
+        "text-color": "#FFFFFF"
+      }
+    }
+  ]
+}
