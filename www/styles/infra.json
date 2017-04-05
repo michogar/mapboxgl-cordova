@@ -29,24 +29,52 @@
   "layers": [
     {
       "id": "nivells",
-      "type": "fill",
+      "type": "fill-extrusion",
       "source": "nivells",
       "source-layer": "nivellsgeojson",
       "minzoom": 16,
       "paint": {
-        "fill-color": "#000000",
-        "fill-opacity": 0.5
+        "fill-extrusion-base": {
+          "property": "NUM_PLANTA",
+          "stops": [
+            [-20, 0],
+            [-1, 57]
+          ]
+        },
+        "fill-extrusion-height": {
+          "property": "NUM_PLANTA",
+          "stops": [
+            [-20, 0],
+            [-1, 57]
+          ]
+        },
+        "fill-extrusion-color": "#888888",
+        "fill-extrusion-opacity": 0.1
       }
     },
     {
       "id": "infra",
-      "type": "fill",
+      "type": "fill-extrusion",
       "source": "infra",
       "source-layer": "infrageojson",
       "minzoom": 16,
       "paint": {
-        "fill-color": "#CC0000",
-        "fill-opacity": 0.3
+        "fill-extrusion-height": {
+          "property": "NUM_PLANTA",
+          "stops": [
+            [-20, 3],
+            [0, 63]
+          ]
+        },
+        "fill-extrusion-base": {
+          "property": "NUM_PLANTA",
+          "stops": [
+            [-20, 0],
+            [-1, 57]
+          ]
+        },
+        "fill-extrusion-color": "#CC0000",
+        "fill-extrusion-opacity": 0.5
       }
     }
   ]
