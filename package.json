@@ -9,13 +9,13 @@
         "plugins": {
             "cordova-plugin-file": {},
             "cordova-plugin-whitelist": {},
-            "cordova-plugin-sqlite-2": {}
+            "cordova-sqlite-ext": {}
         }
     },
     "dependencies": {
         "cordova-android": "~6.2.2",
         "cordova-plugin-file": "~4.3.2",
-        "cordova-plugin-sqlite-2": "^1.0.4",
-        "cordova-plugin-whitelist": "1"
+        "cordova-plugin-whitelist": "1",
+        "cordova-sqlite-ext": "^0.10.4"
     }
 }

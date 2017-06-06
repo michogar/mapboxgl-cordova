@@ -6,8 +6,8 @@ if ('cordova' in window) {
     document.addEventListener("deviceready", function() { readTile(0, 0, 0, onTileRead) }, false);
 }
 
-function onTileRead(blob) {
-  console.log(blob);
+function onTileRead(pbf) {
+  console.log(new TextDecoder("utf-8").decode(pbf));
 }
 
 readJSON('styles/dark-matter.json').then(completeRelativeUrls).then(instantiateMap);

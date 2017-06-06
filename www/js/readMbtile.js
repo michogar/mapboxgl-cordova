@@ -1,12 +1,12 @@
 function readTile(z, x, y, callback) {
     if ('sqlitePlugin' in window) {
         copyDatabaseFile('barcelona_spain.mbtiles').then(function () {
-            var db = sqlitePlugin.openDatabase('barcelona_spain.mbtiles');
+            var db = sqlitePlugin.openDatabase({name: 'barcelona_spain.mbtiles', location: 'default'});
             db.transaction(function (txn) {
-                txn.executeSql('SELECT tile_data FROM tiles WHERE zoom_level=? AND tile_column=? AND tile_row=?', [z, x, y], function (tx, res) {
-                    var str = res.rows.item(0).tile_data;
-                    var blob = new Blob([str]);
-                    callback(blob);
+                txn.executeSql('SELECT BASE64(tile_data) AS data FROM tiles WHERE zoom_level=? AND tile_column=? AND tile_row=?', [z, x, y], function (tx, res) {
+                    var pbf_gz = convertBase64ToUint8Array(res.rows.item(0).data);
+                    var pbf = pako.inflate(pbf_gz);
+                    callback(pbf);
                 });
             }, function (error) {
                 console.log(error);
@@ -20,15 +20,34 @@ function readTile(z, x, y, callback) {
     }
 }
 
+function convertBase64ToUint8Array(base64) {
+    var raw = window.atob(base64);
+    var rawLength = raw.length;
+    var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+    for (var i = 0; i < rawLength; i++) {
+        array[i] = raw.charCodeAt(i);
+    }
+
+    return array;
+}
+
 function copyDatabaseFile(dbName) {
     var sourceFileName = cordova.file.applicationDirectory + 'www/data/' + dbName;
-    var targetDirName = cordova.file.dataDirectory;
+
     return Promise.all([
         new Promise(function (resolve, reject) {
             resolveLocalFileSystemURL(sourceFileName, resolve, reject);
         }),
         new Promise(function (resolve, reject) {
-            resolveLocalFileSystemURL(targetDirName, resolve, reject);
+            // If android
+            resolveLocalFileSystemURL(cordova.file.applicationStorageDirectory, function (dir) {
+                dir.getDirectory('databases', {create: true}, function (subdir) {
+                    resolve(subdir);
+                });
+            }, reject);
+            // Else if ios
+            //resolveLocalFileSystemURL(cordova.file.documentsDirectory, resolve, reject);
         })
     ]).then(function (files) {
         var sourceFile = files[0];
