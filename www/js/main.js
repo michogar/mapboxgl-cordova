@@ -2,6 +2,14 @@
 // Depends on readJSON
 // Depends on addOverlays
 
+if ('cordova' in window) {
+    document.addEventListener("deviceready", function() { readTile(0, 0, 0, onTileRead) }, false);
+}
+
+function onTileRead(blob) {
+  console.log(blob);
+}
+
 readJSON('styles/dark-matter.json').then(completeRelativeUrls).then(instantiateMap);
 
 function instantiateMap(style) {
