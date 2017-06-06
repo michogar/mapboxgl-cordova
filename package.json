@@ -1,0 +1,19 @@
+{
+    "name": "co.geomati.offlinevectormap",
+    "version": "1.0.0",
+    "displayName": "Offline Vector Map",
+    "cordova": {
+        "platforms": [
+            "android"
+        ],
+        "plugins": {
+            "cordova-plugin-file": {},
+            "cordova-plugin-whitelist": {}
+        }
+    },
+    "dependencies": {
+        "cordova-android": "~6.2.2",
+        "cordova-plugin-file": "~4.3.2",
+        "cordova-plugin-whitelist": "1"
+    }
+}

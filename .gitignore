@@ -2,3 +2,5 @@
 platforms/
 !plugins/fetch.json
 plugins/
+node_modules/
+
